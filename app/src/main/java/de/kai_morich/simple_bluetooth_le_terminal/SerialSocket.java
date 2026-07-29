@@ -198,6 +198,16 @@ class SerialSocket extends BluetoothGattCallback {
         // status directly taken from gat_api.h, e.g. 133=0x85=GATT_ERROR ~= timeout
         if (newState == BluetoothProfile.STATE_CONNECTED) {
             Log.d(TAG,"connect status "+status+", discoverServices");
+
+            // Request Bluetooth LE Coded PHY (S=8) for BLE 5 long-range operation.
+            // This is a preference; the final PHY is negotiated with the remote device.
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                gatt.setPreferredPhy(
+                        BluetoothDevice.PHY_LE_CODED,
+                        BluetoothDevice.PHY_LE_CODED,
+                        BluetoothDevice.PHY_OPTION_S8);
+            }
+
             if (!gatt.discoverServices())
                 onSerialConnectError(new IOException("discoverServices failed"));
         } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
@@ -209,6 +219,11 @@ class SerialSocket extends BluetoothGattCallback {
             Log.d(TAG, "unknown connect state "+newState+" "+status);
         }
         // continues asynchronously in onServicesDiscovered()
+    }
+
+    @Override
+    public void onPhyUpdate(BluetoothGatt gatt, int txPhy, int rxPhy, int status) {
+        Log.d(TAG, "PHY update, TX " + txPhy + ", RX " + rxPhy + ", status " + status);
     }
 
     @Override
