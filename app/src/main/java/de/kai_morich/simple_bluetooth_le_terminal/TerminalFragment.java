@@ -245,13 +245,20 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
         }
     }
 
+    SpannableStringBuilder buffer_temp = new SpannableStringBuilder();
+    String buffer_str;
+
+
     private void receive(ArrayDeque<byte[]> datas) {
         SpannableStringBuilder spn = new SpannableStringBuilder();
-        for (byte[] data : datas) {
+        for (byte[] data : datas)
+        {
             if (hexEnabled) {
                 spn.append(TextUtil.toHexString(data)).append('\n');
             } else {
                 String msg = new String(data);
+                buffer_temp = buffer_temp.append(new String(data));
+
                 if (newline.equals(TextUtil.newline_crlf) && msg.length() > 0) {
                     // don't show CR as ^M if directly before LF
                     msg = msg.replace(TextUtil.newline_crlf, TextUtil.newline_lf);
@@ -269,6 +276,13 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
                 }
                 spn.append(TextUtil.toCaretString(msg, newline.length() != 0));
             }
+        }
+        buffer_str = buffer_temp.toString();
+
+        if(buffer_str.endsWith("]"))
+        {
+            String replay ="{\"command\":\"MA_GET_MACHINE_STATUS\"}";
+            send(replay);
         }
         receiveText.append(spn);
     }
