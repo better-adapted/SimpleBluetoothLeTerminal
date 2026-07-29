@@ -201,11 +201,18 @@ class SerialSocket extends BluetoothGattCallback {
 
             // Request Bluetooth LE Coded PHY (S=8) for BLE 5 long-range operation.
             // This is a preference; the final PHY is negotiated with the remote device.
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+/*            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 gatt.setPreferredPhy(
                         BluetoothDevice.PHY_LE_CODED,
                         BluetoothDevice.PHY_LE_CODED,
                         BluetoothDevice.PHY_OPTION_S8);
+            }*/
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                gatt.setPreferredPhy(
+                        BluetoothDevice.PHY_LE_2M,
+                        BluetoothDevice.PHY_LE_2M,
+                        BluetoothDevice.PHY_LE_2M);
             }
 
             if (!gatt.discoverServices())
