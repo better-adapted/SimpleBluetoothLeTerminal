@@ -215,12 +215,12 @@ class SerialSocket extends BluetoothGattCallback {
                         BluetoothDevice.PHY_LE_2M);
             }*/
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+/*            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 gatt.setPreferredPhy(
                         BluetoothDevice.PHY_LE_1M,
                         BluetoothDevice.PHY_LE_1M,
                         BluetoothDevice.PHY_LE_1M);
-            }
+            }*/
 
             if (!gatt.discoverServices())
                 onSerialConnectError(new IOException("discoverServices failed"));
